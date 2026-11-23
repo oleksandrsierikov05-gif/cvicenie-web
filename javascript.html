@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="formular_zadanie.css">
+    <link rel="icon" type="image/png" href="IMG/icon.png">
+</head>
+<body>
+    <div id="topbar-container"></div>
+
+    <div class="content-wrapper" style="justify-content: center; align-items: center; min-height: 80vh;">
+        <div class="form-container home-card" style="max-width: 600px; width: 100%; text-align: center; transition: all 0.3s;">
+            <h1 style="color: #2c3e50; margin-top: 0;">JavaScript</h1>
+        
+
+           
+            <div class="js-box" style="margin-bottom: 25px; padding: 20px; border: 1px solid #eee; border-radius: 8px;">
+                <h2 style="color: #3b82f6; font-size: 18px; margin-top: 0;">1. Click Event</h2>
+                <button id="click-btn" style="background-color: #3b82f6; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; transition: 0.2s;">Click Me!</button>
+                <p id="click-message" style="margin-top: 10px; color: #10b981; font-weight: bold; min-height: 20px;"></p>
+            </div>
+
+            
+            <div class="js-box" style="padding: 20px; border: 1px solid #eee; border-radius: 8px;">
+                <h2 style="color: #3b82f6; font-size: 18px; margin-top: 0;">2. Live Greeting</h2>
+                <input type="text" id="name-input" placeholder="Enter your name..." style="padding: 10px; width: 80%; max-width: 250px; border: 1px solid #ccc; border-radius: 4px;">
+                <p style="margin-top: 15px; font-size: 20px; font-weight: bold;">Hello, <span id="greeting-name" style="color: #3b82f6;">Guest</span>!</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

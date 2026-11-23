@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <title> Kniznica</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="app.js" defer></script>
+    <script src="knihy.js" defer></script>
+    <link rel="icon" type="image/png" href="IMG/icon.png">
+    <link rel="stylesheet" href="formular_zadanie.css">
+</head>
+<body>
+     <div id="topbar-container"></div>
+<h1> Moja kniznica</h1>
+<p id="prihlaseny-pouzivatel" class="user-status" role="status" aria-live="polite">
+    <a href="prihlasenie.html">Prihlásiť sa</a>
+</p>
+<form id="formular">
+    <input id="cena" name="cena" type="number" step="0.01" min="0" placeholder="Cena" required>
+    <input id="nazov" name="nazov" placeholder="Nazov knihy" required>
+    <input id="autor" name="autor" placeholder="Autor" required>
+    <input id="rok" name="rok" type="number" step="1" placeholder="Rok" required>
+    <button type="submit">Pridať knihu</button>
+</form>
+<form id="filter-form">
+    <label for="hladat">Hľadať podľa názvu alebo autora:</label>
+    <input id="hladat" name="hladat" type="text" placeholder="Napr. Hobbit alebo Tolkien">
+
+    <label for="zoradit">Zoradiť podľa:</label>
+    <select id="zoradit" name="zoradit">
+        <option value="cena">Ceny</option>
+        <option value="nazov">Názvu</option>
+        <option value="autor">Autora</option>
+        <option value="rok">Roku vydania</option>
+    </select>
+
+    <label for="smer">Poradie:</label>
+    <select id="smer" name="smer">
+        <option value="ASC">Vzostupne</option>
+        <option value="DESC">Zostupne</option>
+    </select>
+    <button type="submit">Vyhľadať a zoradiť</button>
+</form>
+<p id="sprava" role="status" aria-live="polite"></p>
+<p id="chyba" role="alert" aria-live="assertive"></p>
+<table class="custom-table">
+<thead>
+    <tr>
+        <th>ID</th>
+        <th>Názov</th>
+        <th>Autor</th>
+        <th>Rok</th>
+        <th>Cena</th>
+        <th>Akcia</th>
+    </tr>
+</thead>
+<tbody id="zoznam-knih"></tbody>
+</table>
+</body>
+</html>

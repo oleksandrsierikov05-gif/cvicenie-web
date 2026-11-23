@@ -1,0 +1,152 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    
+   
+    background-image: url('IMG/background.png');
+    
+   
+    background-size: cover; 
+    
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: #e0e5ec;
+    
+   
+    filter: blur(2px);
+    
+    z-index: -1;
+}
+
+
+
+
+
+.topbar a {
+    display: block;
+    color: #555;
+    text-align: center;
+    padding: 16px 20px;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.topbar a:hover {
+    color: #3b82f6;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-top: 40px;
+}
+
+.user-status {
+    width: fit-content;
+    margin: 16px auto;
+    padding: 10px 16px;
+    border-radius: 6px;
+    background-color: #fff;
+    color: #333;
+    text-align: center;
+}
+
+.user-status a {
+    color: #2563eb;
+    font-weight: 600;
+}
+
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #fff;
+}
+
+.custom-table th,
+.custom-table td {
+    border: 1px solid #ddd;
+    padding: 14px;
+    text-align: left;
+    color: #444;
+}
+
+.custom-table th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.custom-table tr:hover {
+    background-color: #f1f5f9;
+}
+
+.custom-table .table-action-button {
+    background-color: #fff;
+    color: #333;
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    margin: 3px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.custom-table .table-action-button:hover {
+    background-color: #f3f4f6;
+    border-color: #9ca3af;
+}
+
+.topbar a.active {
+    color: #3b82f6;
+    border-bottom: 2px solid #3b82f6;
+    font-weight: bold;
+}
+
+
+
+
+.topbar {
+    background-color: #ffffff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap; 
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    margin: 0;
+    z-index: 1000;
+    min-height: 50px;
+}
+
+@media (max-width: 800px) {
+    .topbar {
+        flex-direction: column;
+        padding-bottom: 10px;
+    }
+}
+
+

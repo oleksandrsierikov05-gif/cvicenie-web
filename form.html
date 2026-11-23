@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="formular_zadanie.css"> 
+    <link rel="icon" type="image/png" href="IMG/icon.png">
+</head>
+<body>
+  
+    <div id="topbar-container"></div>
+
+    <div class="content-wrapper" style="justify-content: center; align-items: center; min-height: 80vh;">
+        
+       
+        <div class="form-container home-card" style="max-width: 600px; width: 100%;">
+            <h1 style="color: #2c3e50; margin-top: 0; text-align: center;">Contact Us</h1>
+            
+
+            <form action="#" method="get">
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; color: #444; font-weight: bold; font-size: 14px;">First Name</label>
+                    <input type="text" name="firstname" placeholder="Enter your first name" style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;" required>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; color: #444; font-weight: bold; font-size: 14px;">Email Address</label>
+                    <input type="email" name="email" placeholder="Enter your email" style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;" required>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; color: #444; font-weight: bold; font-size: 14px;">Inquiry Type</label>
+                    <select name="subject" style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+                        <option value="general">General Question</option>
+                        <option value="support">Technical Support</option>
+                        <option value="feedback">Feedback</option>
+                    </select>
+                </div>
+
+                <div style="margin-bottom: 25px;">
+                    <label style="display: block; margin-bottom: 8px; color: #444; font-weight: bold; font-size: 14px;">Message</label>
+                    <textarea name="message" rows="4" placeholder="Write your message here..." style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;" required></textarea>
+                </div>
+
+                <button type="submit" style="background-color: #3b82f6; color: white; padding: 14px 20px; border: none; border-radius: 4px; width: 100%; cursor: pointer; font-size: 16px; font-weight: bold; transition: background 0.3s;">
+                    Send Message
+                </button>
+                
+            </form>
+        </div>
+
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

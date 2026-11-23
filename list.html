@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="formular_zadanie.css">
+    <link rel="icon" type="image/png" href="IMG/icon.png">
+</head>
+<body>
+    <div id="topbar-container"></div>
+
+    <div class="content-wrapper" style="justify-content: center; align-items: center; min-height: 80vh;">
+        <div class="form-container home-card" style="max-width: 700px; width: 100%;">
+            <h1 style="color: #2c3e50; margin-top: 0; text-align: center;">Pending Submissions</h1>
+            <p style="color: #555; text-align: center; margin-bottom: 30px;">Review, approve, or delete student applications here.</p>
+            
+            <ul id="submissions-list" style="list-style-type: none; padding: 0;"></ul>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        function loadList() {
+            const listContainer = document.getElementById('submissions-list');
+            const pendingList = JSON.parse(localStorage.getItem('formSubmissions')) || [];
+
+            if (pendingList.length === 0) {
+                listContainer.innerHTML = '<p style="text-align: center; color: #777;">No pending submissions right now.</p>';
+                return;
+            }
+
+            listContainer.innerHTML = ''; 
+            pendingList.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.style.backgroundColor = '#f8f9fa';
+                li.style.margin = '15px 0';
+                li.style.padding = '20px';
+                li.style.borderRadius = '8px';
+                li.style.borderLeft = '5px solid #f59e0b';
+                li.style.position = 'relative';
+                
+                li.innerHTML = `
+                    <h3 style="margin-top: 0; color: #333;">${item.name}</h3>
+                    <p style="margin: 5px 0; color: #555;"><strong>Email:</strong> ${item.email}</p>
+                    <p style="margin: 5px 0; color: #555;"><strong>Course:</strong> ${item.course} (${item.level})</p>
+                    <div style="margin-top: 15px; display: flex; gap: 10px;">
+                        <button onclick="approveItem(${index})" style="background-color: #10b981; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; transition: background 0.3s;">
+                            Approve
+                        </button>
+                        <button onclick="deleteItem(${index})" style="background-color: #ef4444; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; transition: background 0.3s;">
+                            Delete
+                        </button>
+                    </div>
+                `;
+                listContainer.appendChild(li);
+            });
+        }
+
+        window.approveItem = function(index) {
+            let pendingList = JSON.parse(localStorage.getItem('formSubmissions')) || [];
+            let approvedList = JSON.parse(localStorage.getItem('approvedSubmissions')) || [];
+
+            const approvedStudent = pendingList.splice(index, 1)[0];
+            approvedList.push(approvedStudent);
+
+            localStorage.setItem('formSubmissions', JSON.stringify(pendingList));
+            localStorage.setItem('approvedSubmissions', JSON.stringify(approvedList));
+
+            loadList();
+        }
+
+        window.deleteItem = function(index) {
+            let pendingList = JSON.parse(localStorage.getItem('formSubmissions')) || [];
+            
+
+            pendingList.splice(index, 1);
+            
+
+            localStorage.setItem('formSubmissions', JSON.stringify(pendingList));
+            
+
+            loadList();
+        }
+
+        document.addEventListener('DOMContentLoaded', loadList);
+    </script>
+</body>
+</html>
