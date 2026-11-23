@@ -59,6 +59,21 @@ h1 {
     margin-top: 40px;
 }
 
+.user-status {
+    width: fit-content;
+    margin: 16px auto;
+    padding: 10px 16px;
+    border-radius: 6px;
+    background-color: #fff;
+    color: #333;
+    text-align: center;
+}
+
+.user-status a {
+    color: #2563eb;
+    font-weight: 600;
+}
+
 .custom-table {
     width: 100%;
     border-collapse: collapse;

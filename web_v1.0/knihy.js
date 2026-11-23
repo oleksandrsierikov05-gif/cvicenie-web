@@ -1,7 +1,51 @@
 const formular = document.querySelector("#formular");
+const filterForm = document.querySelector("#filter-form");
+const hladatVstup = document.querySelector("#hladat");
+const zoraditVstup = document.querySelector("#zoradit");
+const smerVstup = document.querySelector("#smer");
 const zoznamKnih = document.querySelector("#zoznam-knih");
 const sprava = document.querySelector("#sprava");
 const chyba = document.querySelector("#chyba");
+
+function zobrazPrihlasenehoPouzivatela() {
+  const info = document.querySelector("#prihlaseny-pouzivatel");
+  if (!info) return;
+
+  info.textContent = "Kontrola prihlásenia...";
+
+  function zobrazOdkazNaPrihlasenie(upozornenie = "") {
+    info.replaceChildren();
+    if (upozornenie) info.append(document.createTextNode(`${upozornenie} `));
+    const odkaz = document.createElement("a");
+    odkaz.href = "prihlasenie.html";
+    odkaz.textContent = "Prihlásiť sa";
+    info.append(odkaz);
+  }
+
+  let ulozeny;
+  try {
+    ulozeny = sessionStorage.getItem("prihlasenyPouzivatel");
+  } catch {
+    zobrazOdkazNaPrihlasenie("Stav prihlásenia sa nepodarilo načítať.");
+    return;
+  }
+  if (ulozeny) {
+    try {
+      const pouzivatel = JSON.parse(ulozeny);
+      if (pouzivatel && typeof pouzivatel.meno === "string" && pouzivatel.meno) {
+        info.textContent = `Prihlásený používateľ: ${pouzivatel.meno}`;
+        return;
+      }
+    } catch {
+      zobrazOdkazNaPrihlasenie("Uložené údaje prihlásenia sú neplatné.");
+      return;
+    }
+    zobrazOdkazNaPrihlasenie("Uložené údaje prihlásenia sú neplatné.");
+    return;
+  }
+
+  zobrazOdkazNaPrihlasenie();
+}
 
 function pridajBunku(riadok, hodnota) {
   const bunka = document.createElement("td");
@@ -19,7 +63,12 @@ async function nacitajKnihy() {
   zoznamKnih.replaceChildren();
 
   try {
-    const odpoved = await fetch("/api/knihy");
+    const parametre = new URLSearchParams({
+      hladat: hladatVstup.value.trim(),
+      zoradit: zoraditVstup.value,
+      smer: smerVstup.value
+    });
+    const odpoved = await fetch(`/api/knihy?${parametre.toString()}`);
     if (!odpoved.ok) {
       throw new Error(await textChyby(odpoved));
     }
@@ -34,7 +83,7 @@ async function nacitajKnihy() {
       const bunka = document.createElement("td");
       bunka.className = "empty";
       bunka.colSpan = 6;
-      bunka.textContent = "V databáze zatiaľ nie sú žiadne knihy.";
+      bunka.textContent = "Nenašli sa žiadne knihy.";
       riadok.append(bunka);
       zoznamKnih.append(riadok);
       return;
@@ -60,8 +109,8 @@ async function nacitajKnihy() {
       const cenaBtn = document.createElement("button");
       cenaBtn.type = "button";
       cenaBtn.className = "table-action-button";
-      cenaBtn.textContent = "Zmeniť cenu";
-      cenaBtn.addEventListener("click", () => zmenCenu(kniha.id, kniha.cena));
+      cenaBtn.textContent = "Zvýšiť cenu";
+      cenaBtn.addEventListener("click", () => zmenCenu(kniha.id));
       akcia.append(cenaBtn);
 
       for (const [pole, popis, textTlacidla] of [
@@ -111,15 +160,16 @@ async function vymazKnihu(id, nazov) {
   }
 }
 
-async function zmenCenu(id, aktualnaCena) {
-  const vstup = window.prompt("Zadajte novú cenu:", aktualnaCena);
-  if (vstup === null || vstup.trim() === "") {
+async function zmenCenu(id) {
+  const vstup = document.querySelector("#cena");
+  if (!vstup || vstup.value.trim() === "") {
+    window.alert("Zadajte sumu zvýšenia do poľa Cena.");
     return;
   }
 
-  const cena = Number(vstup.replace(",", "."));
+  const cena = Number(vstup.value);
   if (!Number.isFinite(cena) || cena < 0) {
-    window.alert("Zadajte platnú nezápornú cenu.");
+    window.alert("Zadajte platnú nezápornú sumu zvýšenia.");
     return;
   }
 
@@ -175,6 +225,13 @@ async function upravPoleKnihy(kniha, pole, popis) {
   }
 }
 
+if (filterForm) {
+  filterForm.addEventListener("submit", udalost => {
+    udalost.preventDefault();
+    nacitajKnihy();
+  });
+}
+
 if (formular) formular.addEventListener("submit", async udalost => {
   udalost.preventDefault();
   if (sprava) sprava.textContent = "";
@@ -217,4 +274,7 @@ if (formular) formular.addEventListener("submit", async udalost => {
   }
 });
 
+zobrazPrihlasenehoPouzivatela();
 nacitajKnihy();
+
+

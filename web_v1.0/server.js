@@ -1,5 +1,6 @@
 const express = require("express");
 const mysql = require("mysql2");
+const bcrypt = require("bcryptjs");
 const app = express();
 
 app.use(express.json());
@@ -18,7 +19,23 @@ db.connect(error => {
 });
 
 app.get("/api/knihy", (req, res) => {
-  db.query("SELECT * FROM knihy", (error, knihy) => {
+  const hladat = (req.query.hladat || "").trim();
+  const zoradit = req.query.zoradit || "id";
+  const smer = req.query.smer === "DESC" ? "DESC" : "ASC";
+
+  // Whitelist povolenych stlpcov pre ORDER BY (ochrana pred SQL Injection)
+  const povoleneStlpce = ["id", "nazov", "autor", "rok", "cena"];
+  const stlpec = povoleneStlpce.includes(zoradit) ? zoradit : "id";
+  let sql = "SELECT * FROM knihy";
+  const parametre = [];
+
+  if (hladat !== "") {
+    sql += " WHERE nazov LIKE ? OR autor LIKE ?";
+    parametre.push(`%${hladat}%`, `%${hladat}%`);
+  }
+
+  sql += ` ORDER BY ${stlpec} ${smer}`;
+  db.query(sql, parametre, (error, knihy) => {
     if (error) return res.status(500).send("Chyba SQL");
     res.json(knihy);
   });
@@ -46,7 +63,7 @@ app.patch("/api/knihy/:id/cena", (req, res) => {
     return res.status(400).send("Neplatna cena");
   }
 
-  const sql = "UPDATE knihy SET cena = ? WHERE id = ?";
+  const sql = "UPDATE knihy SET cena = cena + ? WHERE id = ?";
   db.query(sql, [cena, req.params.id], (error, vysledok) => {
     if (error) return res.status(500).send("Chyba SQL");
     if (vysledok.affectedRows === 0) return res.sendStatus(404);
@@ -64,6 +81,86 @@ if(!nazov || !autor || !Number.isInteger(rok)) {
     if (error) return res.status(500).send("Chyba SQL");
     if (vysledok.affectedRows === 0) return res.sendStatus(404);
     res.send("Kniha upravena");
+  });
+});
+
+app.get("/api/pouzivatelia", (req, res) => {
+  const sql = "SELECT id, meno, email FROM pouzivatelia ORDER BY id ASC";
+  db.query(sql, (error, pouzivatelia) => {
+    if (error) return res.status(500).send("Chyba SQL");
+    res.json(pouzivatelia);
+  });
+});
+
+app.post("/api/pouzivatelia", async (req, res) => {
+  const { meno, email, heslo } = req.body || {};
+  if (typeof meno !== "string" || !meno.trim()
+    || typeof email !== "string" || !email.trim()
+    || typeof heslo !== "string" || !heslo) {
+    return res.status(400).send("Vyplnte meno, e-mail aj heslo");
+  }
+  if (heslo.length < 6) {
+    return res.status(400).send("Heslo musi mat aspon 6 znakov");
+  }
+
+  try {
+    const hesloHash = await bcrypt.hash(heslo, 10);
+    const sql = "INSERT INTO pouzivatelia (meno, email, heslo_hash) VALUES (?, ?, ?)";
+    db.query(sql, [meno.trim(), email.trim(), hesloHash], error => {
+      if (error) {
+        if (error.code === "ER_DUP_ENTRY") {
+          return res.status(409).send("Pouzivatel s tymto e-mailom uz existuje");
+        }
+        return res.status(500).send("Chyba SQL");
+      }
+      res.status(201).send("Pouzivatel bol uspesne zaregistrovany");
+    });
+  } catch (error) {
+    res.status(500).send("Chyba pri spracovani hesla");
+  }
+});
+
+app.delete("/api/pouzivatelia/:id", (req, res) => {
+  const sql = "DELETE FROM pouzivatelia WHERE id = ?";
+  db.query(sql, [req.params.id], (error, vysledok) => {
+    if (error) return res.status(500).send("Chyba SQL");
+    if (vysledok.affectedRows === 0) return res.sendStatus(404);
+    res.send("Pouzivatel vymazany");
+  });
+});
+
+app.post("/api/prihlasenie", (req, res) => {
+  const { email, heslo } = req.body || {};
+  if (typeof email !== "string" || !email.trim()
+    || typeof heslo !== "string" || !heslo) {
+    return res.status(400).json({ sprava: "Zadajte e-mail aj heslo" });
+  }
+
+  const sql = "SELECT id, meno, email, heslo_hash FROM pouzivatelia WHERE email = ?";
+  db.query(sql, [email.trim()], async (error, vysledok) => {
+    if (error) return res.status(500).json({ sprava: "Chyba SQL" });
+    if (vysledok.length === 0) {
+      return res.status(401).json({ sprava: "Nespravny e-mail alebo heslo" });
+    }
+
+    try {
+      const pouzivatel = vysledok[0];
+      const zhoda = await bcrypt.compare(heslo, pouzivatel.heslo_hash);
+      if (!zhoda) {
+        return res.status(401).json({ sprava: "Nespravny e-mail alebo heslo" });
+      }
+
+      res.json({
+        sprava: "Prihlasenie uspesne",
+        pouzivatel: {
+          id: pouzivatel.id,
+          meno: pouzivatel.meno,
+          email: pouzivatel.email
+        }
+      });
+    } catch (error) {
+      res.status(500).json({ sprava: "Chyba pri spracovani hesla" });
+    }
   });
 });
 

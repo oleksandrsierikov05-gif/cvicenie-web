@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Správa používateľov</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="formular_zadanie.css">
+    <link rel="icon" type="image/png" href="IMG/icon.png">
+    <script src="app.js" defer></script>
+    <script src="pouzivatelia.js" defer></script>
+</head>
+<body>
+    <div id="topbar-container"></div>
+    <main class="content-wrapper">
+        <section class="form-container">
+            <h1>Správa používateľov</h1>
+            <form id="registraciaForm">
+                <input id="meno" type="text" placeholder="Meno a priezvisko" required>
+                <input id="email" type="email" placeholder="E-mail" required>
+                <input id="heslo" type="password" minlength="6"
+                    placeholder="Heslo (min. 6 znakov)" required>
+                <button class="submit-btn" type="submit">Registrovať používateľa</button>
+            </form>
+            <p id="sprava" role="status" aria-live="polite"></p>
+            <p id="chyba" role="alert" aria-live="assertive"></p>
+        </section>
+
+        <section class="preview-container">
+            <h2>Zoznam zaregistrovaných používateľov</h2>
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Meno</th>
+                        <th>E-mail</th>
+                        <th>Akcia</th>
+                    </tr>
+                </thead>
+                <tbody id="zoznamPouzivatelov"></tbody>
+            </table>
+        </section>
+    </main>
+</body>
+</html>
